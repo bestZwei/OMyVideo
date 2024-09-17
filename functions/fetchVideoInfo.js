@@ -17,9 +17,11 @@ export async function onRequest(context) {
     const contentType = apiResponse.headers.get('content-type');
     const text = await apiResponse.text();
 
+    // 打印 API 返回的原始内容
     console.log('API 返回内容:', text);
+    console.log('API 返回 Content-Type:', contentType);
     
-    // 验证返回内容是 JSON 格式
+    // 确认返回内容是 JSON 格式
     if (!contentType || !contentType.includes('application/json')) {
       console.error('API 返回内容不是 JSON，返回内容：', text);
       return new Response(JSON.stringify({ error: '无效的 API 返回内容' }), {
@@ -30,7 +32,7 @@ export async function onRequest(context) {
 
     const data = JSON.parse(text);
 
-    if (data.code !== '200') {
+    if (!apiResponse.ok || data.code !== '200') {
       console.error('API 请求失败，返回状态码不正确，返回数据:', data);
       return new Response(JSON.stringify({ error: data.msg || 'API 请求失败' }), {
         status: apiResponse.status,
