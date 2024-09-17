@@ -65,10 +65,15 @@
         return;
       }
       try {
-        const response = await fetch(`/api/fetchVideoInfo?url=${encodeURIComponent(url)}`);
+        const response = await fetch(`/api/fetchVideoInfo`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ url })
+        });
         const data = await response.json();
 
-        // 打印用于调试
         console.log('API 返回数据:', data);
 
         if (data.error || data.code !== '200') {

@@ -1,19 +1,21 @@
 export async function onRequest(context) {
   const { request } = context;
-  const { searchParams } = new URL(request.url);
-  const videoUrl = searchParams.get('url');
+  const { url } = await request.json();
   
-  if (!videoUrl) {
+  if (!url) {
     return new Response(JSON.stringify({ error: 'URL 缺失' }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 
-  const apiUrl = `https://api.shenke.love/api/jhjx.php?url=${encodeURIComponent(videoUrl)}`;
+  const apiUrl = `https://api.shenke.love/api/jhjx.php?url=${encodeURIComponent(url)}`;
 
   try {
-    const apiResponse = await fetch(apiUrl);
+    // POST 请求
+    const apiResponse = await fetch(apiUrl, {
+      method: 'GET' // 根据 API 需求，如果仍然要求 GET 则改为 GET，通常 POST API 会有不同的用法，需要确认API是否支持POST
+    });
     const contentType = apiResponse.headers.get('content-type');
     const text = await apiResponse.text();
 
