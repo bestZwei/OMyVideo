@@ -67,15 +67,15 @@
       try {
         const response = await fetch(`/api/fetchVideoInfo?url=${encodeURIComponent(url)}`);
         const data = await response.json();
-        if (data.error) {
-          document.getElementById('result').innerHTML = `<p>解析失败：${data.error}</p>`;
+        if (data.code !== '200') {
+          document.getElementById('result').innerHTML = `<p>解析失败：${data.msg}</p>`;
         } else {
           const resultDiv = document.getElementById('result');
           resultDiv.innerHTML = `
-            <h2>${data.title}</h2>
-            <p><a href="${data.videourl}" download>下载视频</a></p>
-            <p><a href="${data.coverurl}" download>下载封面图</a></p>
-            <video controls src="${data.videourl}"></video>
+            <h2>${data.data.title}</h2>
+            <p><a href="${data.data.videourl}" download>下载视频</a></p>
+            <p><a href="${data.data.coverurl}" download>下载封面图</a></p>
+            <video controls src="${data.data.videourl}"></video>
           `;
         }
       } catch (error) {
