@@ -1,20 +1,30 @@
 export async function onRequest(context) {
   const { request } = context;
-  const { url } = await request.json();
-  
-  if (!url) {
+  let videoUrl;
+
+  try {
+    const requestBody = await request.json();
+    videoUrl = requestBody.url;
+  } catch (e) {
+    return new Response(JSON.stringify({ error: '请求体解析错误' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  if (!videoUrl) {
     return new Response(JSON.stringify({ error: 'URL 缺失' }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 
-  const apiUrl = `https://api.shenke.love/api/jhjx.php?url=${encodeURIComponent(url)}`;
+  const apiUrl = `https://api.shenke.love/api/jhjx.php?url=${encodeURIComponent(videoUrl)}`;
 
   try {
-    // POST 请求
+    // GET 请求
     const apiResponse = await fetch(apiUrl, {
-      method: 'GET' // 根据 API 需求，如果仍然要求 GET 则改为 GET，通常 POST API 会有不同的用法，需要确认API是否支持POST
+      method: 'GET'
     });
     const contentType = apiResponse.headers.get('content-type');
     const text = await apiResponse.text();
