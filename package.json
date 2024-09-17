@@ -1,0 +1,14 @@
+{
+    "name": "OMyVideo",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "scripts": {
+      "start": "wrangler dev",
+      "deploy": "wrangler publish"
+    },
+    "dependencies": {
+      "@cloudflare/wrangler": "^1.19.5"
+    }
+  }
+  

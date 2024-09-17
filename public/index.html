@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OMyVideo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 90%;
+      max-width: 600px;
+    }
+    input, button {
+      width: 80%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      border: none;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #result {
+      margin-top: 20px;
+      text-align: left;
+    }
+    video {
+      width: 100%;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>OMyVideo</h1>
+    <input type="text" id="videoUrl" placeholder="请输入视频链接">
+    <button onclick="fetchVideoInfo()">解析</button>
+    <div id="result"></div>
+  </div>
+  <script>
+    async function fetchVideoInfo() {
+      const url = document.getElementById('videoUrl').value;
+      if (!url) {
+        alert('请输入有效的视频链接');
+        return;
+      }
+      try {
+        const response = await fetch(`/video?url=${encodeURIComponent(url)}`);
+        const data = await response.json();
+        if (data.error) {
+          document.getElementById('result').innerHTML = `<p>解析失败：${data.error}</p>`;
+        } else {
+          const resultDiv = document.getElementById('result');
+          resultDiv.innerHTML = `
+            <h2>${data.title}</h2>
+            <p><a href="${data.videourl}" download>下载视频</a></p>
+            <p><a href="${data.coverurl}" download>下载封面图</a></p>
+            <video controls src="${data.videourl}"></video>
+          `;
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('result').innerHTML = '<p>解析失败，请稍后再试。</p>';
+      }
+    }
+  </script>
+</body>
+</html>
