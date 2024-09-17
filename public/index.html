@@ -67,6 +67,9 @@
       try {
         const response = await fetch(`/api/fetchVideoInfo?url=${encodeURIComponent(url)}`);
         const data = await response.json();
+        
+        console.log('API 返回数据:', data);
+
         if (data.error || data.code !== '200') {
           document.getElementById('result').innerHTML = `<p>解析失败：${data.error || data.msg}</p>`;
         } else {
@@ -79,8 +82,8 @@
           `;
         }
       } catch (error) {
-        console.error('Error:', error);
-        document.getElementById('result').innerHTML = '<p>解析失败，请稍后再试。</p>';
+        console.error('捕获到的错误:', error);
+        document.getElementById('result').innerHTML = `<p>解析失败，请稍后再试。错误信息：${error.message}</p>`;
       }
     }
   </script>
