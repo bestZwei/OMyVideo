@@ -18,11 +18,10 @@ export async function onRequest(context) {
     const text = await apiResponse.text();
 
     console.log('API 返回内容:', text);
-    
-    // 验证返回内容是 JSON 格式
-    if (!contentType.includes('application/json')) {
+
+    if (!contentType || !contentType.includes('application/json')) {
       console.error('API 返回内容不是 JSON，返回内容：', text);
-      return new Response(JSON.stringify({ error: '无效的 API 返回内容' }), {
+      return new Response(JSON.stringify({ error: `无效的 API 返回内容: ${text}` }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -43,7 +42,7 @@ export async function onRequest(context) {
     });
   } catch (error) {
     console.error('捕获到的错误:', error);
-    return new Response(JSON.stringify({ error: '解析失败，请检查链接或稍后再试' }), {
+    return new Response(JSON.stringify({ error: `解析失败，请检查链接或稍后再试: ${error.message}` }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
