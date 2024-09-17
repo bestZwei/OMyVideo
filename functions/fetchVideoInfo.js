@@ -16,8 +16,8 @@ export async function onRequest(context) {
     const apiResponse = await fetch(apiUrl);
     const data = await apiResponse.json();
 
-    if (!apiResponse.ok || data.code !== '200') {
-      return new Response(JSON.stringify({ error: 'API 请求失败' }), {
+    if (data.code !== '200') {
+      return new Response(JSON.stringify({ error: 'API 请求失败，返回状态码不正确' }), {
         status: apiResponse.status,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -27,7 +27,8 @@ export async function onRequest(context) {
       headers: { 'Content-Type': 'application/json' }
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error: '解析失败' }), {
+    console.error('Error:', error);
+    return new Response(JSON.stringify({ error: '解析失败，请检查链接或稍后再试' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });

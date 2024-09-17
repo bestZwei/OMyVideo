@@ -67,8 +67,8 @@
       try {
         const response = await fetch(`/api/fetchVideoInfo?url=${encodeURIComponent(url)}`);
         const data = await response.json();
-        if (data.code !== '200') {
-          document.getElementById('result').innerHTML = `<p>解析失败：${data.msg}</p>`;
+        if (data.error) {
+          document.getElementById('result').innerHTML = `<p>解析失败：${data.error}</p>`;
         } else {
           const resultDiv = document.getElementById('result');
           resultDiv.innerHTML = `
