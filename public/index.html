@@ -69,9 +69,12 @@
         const contentType = response.headers.get('content-type');
         
         console.log('响应内容类型:', contentType);
+        const responseText = await response.text();
+
+        console.log('完整响应文本:', responseText);
 
         if (contentType && contentType.includes('application/json')) {
-          const data = await response.json();
+          const data = JSON.parse(responseText);
           console.log('API 返回数据:', data);
 
           if (data.error || data.code !== '200') {
@@ -86,9 +89,8 @@
             `;
           }
         } else {
-          const responseText = await response.text();
           console.error('非 JSON 响应:', responseText);
-          throw new Error(`非 JSON 响应: ${responseText}`);
+          document.getElementById('result').innerHTML = `<p>解析失败，请稍后再试。错误信息：非 JSON 响应</p>`;
         }
       } catch (error) {
         console.error('捕获到的错误:', error);

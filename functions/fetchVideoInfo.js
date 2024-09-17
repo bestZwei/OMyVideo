@@ -15,11 +15,10 @@ export async function onRequest(context) {
   try {
     const apiResponse = await fetch(apiUrl);
     const contentType = apiResponse.headers.get('content-type');
+    const responseText = await apiResponse.text();
 
     console.log('API 请求 URL:', apiUrl);
     console.log('API 响应内容类型:', contentType);
-    
-    const responseText = await apiResponse.text();
     console.log('API 响应文本:', responseText);
 
     if (contentType && contentType.includes('application/json')) {
