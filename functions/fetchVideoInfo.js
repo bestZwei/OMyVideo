@@ -16,8 +16,8 @@ export async function onRequest(context) {
     const apiResponse = await fetch(apiUrl);
     const data = await apiResponse.json();
 
-    if (data.code !== '200') {
-      return new Response(JSON.stringify({ error: 'API 请求失败，返回状态码不正确' }), {
+    if (!apiResponse.ok || data.code !== '200') {
+      return new Response(JSON.stringify({ error: data.msg || 'API 请求失败' }), {
         status: apiResponse.status,
         headers: { 'Content-Type': 'application/json' }
       });
