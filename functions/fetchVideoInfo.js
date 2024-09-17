@@ -15,26 +15,22 @@ export async function onRequest(context) {
   try {
     const apiResponse = await fetch(apiUrl);
     const contentType = apiResponse.headers.get('content-type');
-    
-    console.log('API 请求 URL:', apiUrl);
-    console.log('API 响应内容类型:', contentType);
-    
-    const responseText = await apiResponse.text();
-    console.log('API 响应文本:', responseText);
+    const text = await apiResponse.text();
 
-    let data;
-
-    try {
-      data = JSON.parse(responseText);
-    } catch (error) {
-      console.error('解析 JSON 失败:', error);
-      return new Response(JSON.stringify({ error: `非 JSON 响应: ${responseText}` }), {
+    console.log('API 返回内容:', text);
+    
+    // 确认返回内容是 JSON 格式
+    if (!contentType.includes('application/json')) {
+      console.error('API 返回内容不是 JSON');
+      return new Response(JSON.stringify({ error: '无效的 API 返回内容' }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' }
       });
     }
 
-    if (data.code !== '200') {
+    const data = JSON.parse(text);
+
+    if (!apiResponse.ok || data.code !== '200') {
       console.error('API 请求失败，返回状态码不正确:', data);
       return new Response(JSON.stringify({ error: data.msg || 'API 请求失败' }), {
         status: apiResponse.status,

@@ -66,19 +66,9 @@
       }
       try {
         const response = await fetch(`/api/fetchVideoInfo?url=${encodeURIComponent(url)}`);
-        const contentType = response.headers.get('content-type');
-        
-        console.log('响应内容类型:', contentType);
+        const data = await response.json();
 
-        const responseText = await response.text();
-        let data;
-        
-        try {
-          data = JSON.parse(responseText);
-        } catch (error) {
-          throw new Error(`非 JSON 响应: ${responseText}`);
-        }
-
+        // 打印用于调试
         console.log('API 返回数据:', data);
 
         if (data.error || data.code !== '200') {
